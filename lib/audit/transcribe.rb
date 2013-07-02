@@ -5,7 +5,6 @@ module Audit #TODO: Railstar
     module ClassMethods
       def audit_log(force: false)
         has_many :audits, class_name: 'Audit::AuditLog', as: :auditable
-        scope :auditable, -> { ::Audit::AuditLog.where(auditable_type: self) }
         if force
           after_create {|r| r.snapping(crud_name: 'create') }
           after_update {|r| r.snapping(crud_name: 'update') }
@@ -24,6 +23,10 @@ module Audit #TODO: Railstar
           t.acl = acl
           t.data = data.to_json
         end
+      end
+
+      def auditable
+        ::Audit::AuditLog.where(auditable_type: self)
       end
     end
 
