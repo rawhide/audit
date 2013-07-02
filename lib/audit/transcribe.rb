@@ -12,15 +12,15 @@ module Audit #TODO: Railstar
         end
       end
 
-      def transcribe(user: nil, view_name: nil, action_name: nil, crud_name: 'search', acl: 'none', data: nil, opts: {})
+      def transcribe(user: nil, view_name: nil, action_name: nil, crud_name: 'search', acl: nil, data: nil, opts: {}, params: {})
         return false if !user
         ::Audit::AuditLog.create do |t|
-          t.auditable_type = opts[:type]
+          t.auditable_type = opts[:type] || self
           t.user_id = user.id
-          t.view_name = view_name
-          t.action_name = action_name
+          t.view_name = view_name || user.branch.try(:name)
+          t.action_name = action_name || "#{params[:controller]}##{params[:action]}"
           t.crud_name = crud_name
-          t.acl = acl
+          t.acl = acl || user.acl_groups.first.try(:name) || 'none'
           t.data = data.to_json
         end
       end

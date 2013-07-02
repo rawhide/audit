@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    audit (0.0.1)
+    audit (0.0.2)
       activerecord (~> 4.0.0.beta1)
       activesupport (~> 4.0.0.beta1)
       rails (~> 4.0.0.beta1)

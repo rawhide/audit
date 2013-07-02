@@ -30,6 +30,15 @@ ActiveRecord::Schema.define :version => 0 do
     t.string :name
   end
 
+  create_table :acl_groups, force: true do |t|
+    t.string :name
+  end
+
+  create_table :acl_roles, force: true do |t|
+    t.belongs_to :user
+    t.belongs_to :acl_group
+  end
+
   b = Branch.create(name: 'branch1')
   h = Home.create(name: 'home1', branch_id: b.id)
   u1 = User.create(name: 'user1', branch_id: b.id)
@@ -38,6 +47,8 @@ ActiveRecord::Schema.define :version => 0 do
   Post.create(title: 'aaa', body: 'bbb', user_id: u1.id)
   Post.create(title: 'ccc', body: 'ddd', user_id: u1.id)
 
+  ag = AclGroup.create(name: 'test')
+  u1.acl_groups << ag
 end
 
 CreateAuditLogs.migrate(:up)
